@@ -1,5 +1,4 @@
 import { registerPlugin } from '@capacitor/core';
-
 import type { ForgeRockAuthPlugin } from './definitions';
 
 const ForgeRockAuth = registerPlugin<ForgeRockAuthPlugin>('ForgeRockAuth', {
@@ -7,4 +6,4 @@ const ForgeRockAuth = registerPlugin<ForgeRockAuthPlugin>('ForgeRockAuth', {
 });
 
 export * from './definitions';
-export { ForgeRockAuth };
+export default ForgeRockAuth;

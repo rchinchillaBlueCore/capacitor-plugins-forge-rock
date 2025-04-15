@@ -1,2 +1,13 @@
 include ':capacitor-android'
 project(':capacitor-android').projectDir = new File('../node_modules/@capacitor/android/capacitor')
+include ':forgerock-auth'
+include ':forgerock-core'
+include ':forgerock-secure-storage'
+include ':forgerock-shared'
+include ':forgerock-ui'
+
+project(':forgerock-auth').projectDir = new File(rootProject.projectDir, 'forgerock-android-sdk/forgerock-auth')
+project(':forgerock-core').projectDir = new File(rootProject.projectDir, 'forgerock-android-sdk/forgerock-core')
+project(':forgerock-secure-storage').projectDir = new File(rootProject.projectDir, 'forgerock-android-sdk/forgerock-secure-storage')
+project(':forgerock-shared').projectDir = new File(rootProject.projectDir, 'forgerock-android-sdk/forgerock-shared')
+project(':forgerock-ui').projectDir = new File(rootProject.projectDir, 'forgerock-android-sdk/forgerock-ui')

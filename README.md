@@ -13,14 +13,29 @@ npx cap sync
 
 <docgen-index>
 
+* [`echo(...)`](#echo)
 * [`initialize(...)`](#initialize)
 * [`authenticate()`](#authenticate)
-* [`echo(...)`](#echo)
 
 </docgen-index>
 
 <docgen-api>
 <!--Update the source file JSDoc comments and rerun docgen to update the docs below-->
+
+### echo(...)
+
+```typescript
+echo(options: { value: string; }) => Promise<{ value: string; }>
+```
+
+| Param         | Type                            |
+| ------------- | ------------------------------- |
+| **`options`** | <code>{ value: string; }</code> |
+
+**Returns:** <code>Promise&lt;{ value: string; }&gt;</code>
+
+--------------------
+
 
 ### initialize(...)
 
@@ -38,25 +53,10 @@ initialize(options: { url: string; realm: string; journey: string; }) => Promise
 ### authenticate()
 
 ```typescript
-authenticate() => Promise<any>
+authenticate() => Promise<{ success: boolean; }>
 ```
 
-**Returns:** <code>Promise&lt;any&gt;</code>
-
---------------------
-
-
-### echo(...)
-
-```typescript
-echo(options: { value: string; }) => Promise<{ value: string; }>
-```
-
-| Param         | Type                            |
-| ------------- | ------------------------------- |
-| **`options`** | <code>{ value: string; }</code> |
-
-**Returns:** <code>Promise&lt;{ value: string; }&gt;</code>
+**Returns:** <code>Promise&lt;{ success: boolean; }&gt;</code>
 
 --------------------
 

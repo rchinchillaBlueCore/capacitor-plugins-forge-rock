@@ -16,18 +16,19 @@ public class ForgeRockAuth {
 
     public static void initialize(Context context, String url, String realm, String journey) {
         try {
-            FROptions options = new FROptionsBuilder()
-                .server(builder -> {
-                    builder.setUrl(url);
-                    builder.setRealm(realm);
-                    builder.setCookieName("iPlanetDirectoryPro");
-                    
-                })
-                .service(builder -> {
-                    builder.setAuthServiceName(journey)
+            FROptions options = FROptionsBuilder.build(frOptionsBuilder -> {
+                frOptionsBuilder.server(serverBuilder -> {
+                    serverBuilder.setUrl(url);
+                    serverBuilder.setRealm(realm);
+                    serverBuilder.setCookieName("iPlanetDirectoryPro");
                     return null;
-                    })
-                .build();
+                });
+                frOptionsBuilder.service(serviceBuilder -> {
+                    serviceBuilder.setAuthServiceName(journey);
+                    return null;
+                });
+                return null;
+            });
 
             FRAuth.start(context, options);
             Log.d(TAG, "ForgeRock SDK inicializado");

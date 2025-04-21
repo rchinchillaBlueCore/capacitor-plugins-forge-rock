@@ -7,14 +7,13 @@ import org.forgerock.android.auth.FRAuth;
 import org.forgerock.android.auth.FRSession;
 import org.forgerock.android.auth.FROptions;
 import org.forgerock.android.auth.FROptionsBuilder;
-import org.forgerock.android.auth.Node;
-import org.forgerock.android.auth.NodeListener;
 
 public class ForgeRockAuth {
 
     private static final String TAG = "ForgeRockAuth";
 
     public static void initialize(Context context, String url, String realm, String journey) {
+        Log.d("ForgeRockAuth", "ForgeRock SDK initialize");
         try {
             FROptions options = FROptionsBuilder.build(frOptionsBuilder -> {
                 frOptionsBuilder.server(serverBuilder -> {
@@ -38,17 +37,13 @@ public class ForgeRockAuth {
         }
     }
 
-    public static void authenticate(Context context, NodeListener<FRSession> listener) {
+    public static void authenticate(Context context, String journeyName, ForgeRockNodeListener listener) {
         try {
-            FRSession.authenticate(context, (String) null, listener);
+            Log.d(TAG, "Starting authentication with journey: " + journeyName);
+            FRSession.authenticate(context, journeyName, listener);
         } catch (Exception e) {
-            Log.e(TAG, "Error en la autenticación", e);
-            listener.onException(e);
+            Log.e(TAG, "Error starting authentication", e);
+            listener.getCall().reject("Error starting authentication: " + e.getMessage(), e);
         }
-    }
-
-    public static void handleNodeCallbacks(Node node) {
-        Log.d(TAG, "Node recibido: " + node.getStage());
-        // Aquí puedes manejar los diferentes tipos de callbacks del nodo
     }
 }

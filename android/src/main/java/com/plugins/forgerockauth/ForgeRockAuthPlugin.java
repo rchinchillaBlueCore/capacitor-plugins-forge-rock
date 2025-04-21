@@ -1,6 +1,7 @@
 package com.plugins.forgerockauth;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.getcapacitor.Plugin;
 import com.getcapacitor.PluginCall;
@@ -9,10 +10,10 @@ import com.getcapacitor.PluginMethod;
 import com.getcapacitor.JSObject;
 import com.plugins.forgerockauth.ForgeRockNodeListener;
 
-
 @CapacitorPlugin(name = "ForgeRockAuth")
 public class ForgeRockAuthPlugin extends Plugin {
 
+    private static final String TAG = "ForgeRockAuthPlugin";
     public static Context context;
 
     @Override
@@ -39,16 +40,24 @@ public class ForgeRockAuthPlugin extends Plugin {
             ForgeRockAuth.initialize(context, url, realm, journey);
             call.resolve();
         } catch (Exception e) {
-            call.reject("Fallo al inicializar el SDK de ForgeRock", e);
+            call.reject("Fallo al initializer el SDK de ForgeRock", e);
         }
     }
-
     @PluginMethod
     public void authenticate(PluginCall call) {
         try {
-            ForgeRockAuth.authenticate(context, new ForgeRockNodeListener(context, call));
+            String journey = call.getString("journey");
+
+            if (journey == null) {
+                call.reject("Missing journey name");
+                return;
+            }
+
+            ForgeRockAuth.authenticate(getContext(), journey, new ForgeRockNodeListener(call));
         } catch (Exception e) {
-            call.reject("Error durante la autenticación", e);
+            Log.e(TAG, "Authentication error", e);
+            call.reject("Authentication failed: " + e.getMessage(), e);
         }
     }
+
 }

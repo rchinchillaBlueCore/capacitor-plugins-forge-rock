@@ -63,6 +63,9 @@ dependencies {
     implementation(name: 'forgerock-authenticator-release', ext: 'aar')
     implementation(name: 'forgerock-core-release', ext: 'aar')
     implementation(name: 'forgerock-integration-tests-release', ext: 'aar')
+    implementation 'com.squareup.okhttp3:okhttp:4.11.0'
+    implementation 'com.squareup.okhttp3:logging-interceptor:4.11.0'
+    implementation "org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.3"
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
     implementation 'com.google.android.material:material:1.11.0'
     testImplementation "junit:junit:$junitVersion"

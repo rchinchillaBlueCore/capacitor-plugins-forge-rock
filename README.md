@@ -15,7 +15,7 @@ npx cap sync
 
 * [`echo(...)`](#echo)
 * [`initialize(...)`](#initialize)
-* [`authenticate()`](#authenticate)
+* [`authenticate(...)`](#authenticate)
 
 </docgen-index>
 
@@ -50,13 +50,17 @@ initialize(options: { url: string; realm: string; journey: string; }) => Promise
 --------------------
 
 
-### authenticate()
+### authenticate(...)
 
 ```typescript
-authenticate() => Promise<{ success: boolean; }>
+authenticate(options: { journey: string; }) => Promise<{ authId: string; }>
 ```
 
-**Returns:** <code>Promise&lt;{ success: boolean; }&gt;</code>
+| Param         | Type                              |
+| ------------- | --------------------------------- |
+| **`options`** | <code>{ journey: string; }</code> |
+
+**Returns:** <code>Promise&lt;{ authId: string; }&gt;</code>
 
 --------------------
 

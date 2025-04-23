@@ -11,6 +11,7 @@ import org.forgerock.android.auth.FROptionsBuilder;
 public class ForgeRockAuth {
 
     private static final String TAG = "ForgeRockAuth";
+    private static FRSession session;
 
     public static void initialize(Context context, String url, String realm, String journey) {
         Log.d("ForgeRockAuth", "ForgeRock SDK initialize");
@@ -44,6 +45,22 @@ public class ForgeRockAuth {
         } catch (Exception e) {
             Log.e(TAG, "Error starting authentication", e);
             listener.getCall().reject("Error starting authentication: " + e.getMessage(), e);
+        }
+    }
+
+    public static void logout(ForgeRockNodeListener listener) {
+        try {
+            FRSession currentSession = FRSession.getCurrentSession();
+
+            if (currentSession != null) {
+                currentSession.logout();
+                listener.onSuccess("Sesión cerrada exitosamente.");
+            } else {
+                listener.onError("No hay sesión activa para cerrar.");
+            }
+
+        } catch (Exception e) {
+            listener.onError("Error al cerrar sesión: " + e.getMessage());
         }
     }
 }

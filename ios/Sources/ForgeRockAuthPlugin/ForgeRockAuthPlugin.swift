@@ -12,6 +12,7 @@ public class ForgeRockAuthPlugin: CAPPlugin, CAPBridgedPlugin {
         CAPPluginMethod(name: "echo", returnType: CAPPluginReturnPromise),
         CAPPluginMethod(name: "initialize", returnType: CAPPluginReturnPromise),
         CAPPluginMethod(name: "authenticate", returnType: CAPPluginReturnPromise),
+        CAPPluginMethod(name: "logout", returnType: CAPPluginReturnPromise),
     ]
     private let implementation = ForgeRockAuth()
 
@@ -63,7 +64,6 @@ public class ForgeRockAuthPlugin: CAPPlugin, CAPBridgedPlugin {
                 call.reject("Error starting authentication: \(error.localizedDescription)")
             } else if let node = node {
                 print("[ForgeRock] Received node with \(node.callbacks.count) callbacks")
-                // You can send more detailed info if you serialize callbacks
                 call.resolve(["status": "nodeReceived", "callbacksCount": node.callbacks.count])
             } else if let token = token {
                 print("[ForgeRock] Authentication complete, token received: \(token)")
@@ -72,6 +72,20 @@ public class ForgeRockAuthPlugin: CAPPlugin, CAPBridgedPlugin {
                 print("[ForgeRock] Unexpected state — no token, node, or error.")
                 call.reject("Unexpected authentication result")
             }
+        }
+    }
+
+    @objc func logout(_ call: CAPPluginCall) {
+        if let currentSession = FRSession.currentSession {
+            currentSession.logout()
+            print("[ForgeRock] Session closed successfully.")
+            call.resolve([
+                "status": "success",
+                "message": "Session closed successfully.",
+            ])
+        } else {
+            print("[ForgeRock] No active session to logout.")
+            call.reject("No active session to logout.")
         }
     }
 }

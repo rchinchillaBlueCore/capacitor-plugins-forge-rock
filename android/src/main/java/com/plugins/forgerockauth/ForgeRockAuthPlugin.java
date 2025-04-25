@@ -53,11 +53,23 @@ public class ForgeRockAuthPlugin extends Plugin {
                 return;
             }
 
-            ForgeRockAuth.authenticate(getContext(), journey, new ForgeRockNodeListener(call));
+            ForgeRockAuth.authenticate(getContext(),
+                    journey, new ForgeRockNodeListener(call,getContext()));
         } catch (Exception e) {
             Log.e(TAG, "Authentication error", e);
             call.reject("Authentication failed: " + e.getMessage(), e);
         }
     }
+
+    @PluginMethod
+    public void logout(PluginCall call) {
+        try {
+            ForgeRockAuth.logout(new ForgeRockNodeListener(call, getContext()));
+        } catch (Exception e) {
+            Log.e(TAG, "Logout error", e);
+            call.reject("Logout failed: " + e.getMessage(), e);
+        }
+    }
+
 
 }

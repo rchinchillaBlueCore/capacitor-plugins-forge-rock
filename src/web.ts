@@ -9,6 +9,10 @@ export class ForgeRockAuthWeb extends WebPlugin implements ForgeRockAuthPlugin {
   async authenticate(): Promise<any> {
     return { success: true };
   }
+  
+  async logout(): Promise<any> {
+    return { success: true };
+  }
 
   async echo(options: { value: string }): Promise<{
     value: string;

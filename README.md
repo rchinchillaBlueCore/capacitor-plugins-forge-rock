@@ -16,6 +16,7 @@ npx cap sync
 * [`echo(...)`](#echo)
 * [`initialize(...)`](#initialize)
 * [`authenticate(...)`](#authenticate)
+* [`logout()`](#logout)
 
 </docgen-index>
 
@@ -53,14 +54,25 @@ initialize(options: { url: string; realm: string; journey: string; }) => Promise
 ### authenticate(...)
 
 ```typescript
-authenticate(options: { journey: string; }) => Promise<{ authId: string; }>
+authenticate(options: { journey: string; username?: string; password?: string; }) => Promise<{ authId?: string; token?: string; userExists?: boolean; }>
 ```
 
-| Param         | Type                              |
-| ------------- | --------------------------------- |
-| **`options`** | <code>{ journey: string; }</code> |
+| Param         | Type                                                                    |
+| ------------- | ----------------------------------------------------------------------- |
+| **`options`** | <code>{ journey: string; username?: string; password?: string; }</code> |
 
-**Returns:** <code>Promise&lt;{ authId: string; }&gt;</code>
+**Returns:** <code>Promise&lt;{ authId?: string; token?: string; userExists?: boolean; }&gt;</code>
+
+--------------------
+
+
+### logout()
+
+```typescript
+logout() => Promise<{ message: string; }>
+```
+
+**Returns:** <code>Promise&lt;{ message: string; }&gt;</code>
 
 --------------------
 

@@ -54,6 +54,27 @@ public class ForgeRockAuthPlugin extends Plugin {
     }
 
     @PluginMethod
+    public void enrollBiometrics(PluginCall call) {
+        try {
+            ForgeRockAuth.enrollBiometrics(getContext(), call);
+        } catch (Exception e) {
+            Log.e(TAG, "Biometric enrollment failed", e);
+            call.reject("Biometric enrollment failed: " + e.getMessage(), e);
+        }
+    }
+
+    @PluginMethod
+    public void authenticateBiometrics(PluginCall call) {
+        try {
+            ForgeRockAuth.authenticateBiometric(getContext(), new ForgeRockNodeListener(call, getContext()));
+        } catch (Exception e) {
+            Log.e(TAG, "Biometric authentication error", e);
+            call.reject("Biometric authentication failed: " + e.getMessage(), e);
+        }
+    }
+
+
+    @PluginMethod
     public void logout(PluginCall call) {
         try {
             ForgeRockAuth.logout(new ForgeRockNodeListener(call, getContext()));

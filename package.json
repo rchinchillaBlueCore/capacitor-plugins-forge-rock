@@ -71,7 +71,8 @@
   },
   "capacitor": {
     "ios": {
-      "src": "ios"
+      "src": "ios",
+      "podspec": "ios/Plugin.podspec"
     },
     "android": {
       "src": "android"

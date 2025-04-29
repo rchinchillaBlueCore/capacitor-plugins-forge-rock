@@ -59,15 +59,19 @@ public class ForgeRockAuthPlugin: CAPPlugin, CAPBridgedPlugin {
         print("[ForgeRock] Starting authentication with journey: \(journey)")
 
         FRSession.authenticate(authIndexValue: journey) { token, node, error in
+            let handler = ForgeRockNodeHandler(call: call)
             if let error = error {
                 print("[ForgeRock] Error starting authentication: \(error)")
                 call.reject("Error starting authentication: \(error.localizedDescription)")
             } else if let node = node {
                 print("[ForgeRock] Received node with \(node.callbacks.count) callbacks")
-                call.resolve(["status": "nodeReceived", "callbacksCount": node.callbacks.count])
+                print("[ForgeRock] Received node with \(node.callbacks)")
+                // call.resolve(["status": "nodeReceived", "callbacksCount": node.callbacks.count])
+                handler.handle(node: node)
             } else if let token = token {
                 print("[ForgeRock] Authentication complete, token received: \(token)")
-                call.resolve(["status": "authenticated", "token": token])
+                // call.resolve(["status": "authenticated", "token": token])
+                handler.onSuccess(token: token)
             } else {
                 print("[ForgeRock] Unexpected state — no token, node, or error.")
                 call.reject("Unexpected authentication result")

@@ -14,16 +14,12 @@ export class ForgeRockAuthWeb extends WebPlugin implements ForgeRockAuthPlugin {
     return { success: true };
   }
 
-  async echo(options: { value: string }): Promise<{
-    value: string;
-    message: string;
-    numeroAleatorio: number;
-  }> {
-    console.log('HOLA (web)', options);
-    return {
-      value: options.value,
-      message: '¡Hola desde Web!',
-      numeroAleatorio: Math.floor(Math.random() * 100),
-    };
+  async enrollBiometrics(): Promise<any> {
+    return { success: true };
   }
+
+  async authenticateBiometrics(): Promise<any> {
+    return { success: true };
+  }
+
 }

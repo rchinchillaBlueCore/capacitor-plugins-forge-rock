@@ -13,30 +13,16 @@ npx cap sync
 
 <docgen-index>
 
-* [`echo(...)`](#echo)
 * [`initialize(...)`](#initialize)
 * [`authenticate(...)`](#authenticate)
 * [`logout()`](#logout)
+* [`enrollBiometrics(...)`](#enrollbiometrics)
+* [`authenticateBiometrics(...)`](#authenticatebiometrics)
 
 </docgen-index>
 
 <docgen-api>
 <!--Update the source file JSDoc comments and rerun docgen to update the docs below-->
-
-### echo(...)
-
-```typescript
-echo(options: { value: string; }) => Promise<{ value: string; }>
-```
-
-| Param         | Type                            |
-| ------------- | ------------------------------- |
-| **`options`** | <code>{ value: string; }</code> |
-
-**Returns:** <code>Promise&lt;{ value: string; }&gt;</code>
-
---------------------
-
 
 ### initialize(...)
 
@@ -73,6 +59,36 @@ logout() => Promise<{ message: string; }>
 ```
 
 **Returns:** <code>Promise&lt;{ message: string; }&gt;</code>
+
+--------------------
+
+
+### enrollBiometrics(...)
+
+```typescript
+enrollBiometrics(options: { journey: string; username: string; deviceName: string; }) => Promise<{ success: boolean; message: string; }>
+```
+
+| Param         | Type                                                                    |
+| ------------- | ----------------------------------------------------------------------- |
+| **`options`** | <code>{ journey: string; username: string; deviceName: string; }</code> |
+
+**Returns:** <code>Promise&lt;{ success: boolean; message: string; }&gt;</code>
+
+--------------------
+
+
+### authenticateBiometrics(...)
+
+```typescript
+authenticateBiometrics(options: { journey: string; username: string; }) => Promise<{ token: string; userExists: boolean; authId: string; success: boolean; message: string; }>
+```
+
+| Param         | Type                                                |
+| ------------- | --------------------------------------------------- |
+| **`options`** | <code>{ journey: string; username: string; }</code> |
+
+**Returns:** <code>Promise&lt;{ token: string; userExists: boolean; authId: string; success: boolean; message: string; }&gt;</code>
 
 --------------------
 

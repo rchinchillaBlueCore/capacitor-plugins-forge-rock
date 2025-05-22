@@ -105,7 +105,6 @@ public class ForgeRockAuth {
                     callback.authenticate(context, biometricNode, WebAuthnKeySelector.DEFAULT, new FRListener<Void>() {
                         @Override
                         public void onSuccess(Void result) {
-                            // Continuar con el nodo
                             biometricNode.next(context, listener);
                         }
 
@@ -114,7 +113,7 @@ public class ForgeRockAuth {
                             Log.e("ForgeRockAuth", "Error during biometric authentication", e);
                             if (listener instanceof ForgeRockNodeListener) {
                                 ForgeRockNodeListener frListener = (ForgeRockNodeListener) listener;
-                                PluginCall call = frListener.getCall(); // Asegúrate de tener un getter para el call si es privado
+                                PluginCall call = frListener.getCall();
                                 if (call != null) {
                                     call.reject("Error during biometric authentication: " + e.getMessage(), e);
                                 }

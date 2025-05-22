@@ -47,10 +47,6 @@ android {
 repositories {
     google()
     mavenCentral()
-    //maven { url "https://maven.forgerock.org/releases" }
-    flatDir {
-        dirs 'libs'
-    }
 }
 
 
@@ -58,11 +54,10 @@ dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation project(':capacitor-android')
     implementation "androidx.appcompat:appcompat:$androidxAppCompatVersion"
-    implementation(name: 'forgerock-auth-release', ext: 'aar')
-    implementation(name: 'forgerock-auth-ui-release', ext: 'aar')
-    implementation(name: 'forgerock-authenticator-release', ext: 'aar')
-    implementation(name: 'forgerock-core-release', ext: 'aar')
-    implementation(name: 'forgerock-integration-tests-release', ext: 'aar')
+    implementation 'org.forgerock:forgerock-auth:+'
+    implementation 'org.forgerock:forgerock-auth-ui:+'
+    implementation 'org.forgerock:forgerock-authenticator:+'
+    implementation 'org.forgerock:forgerock-core:+'
     implementation 'com.squareup.okhttp3:okhttp:4.11.0'
     implementation 'com.squareup.okhttp3:logging-interceptor:4.11.0'
     implementation "org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.3"

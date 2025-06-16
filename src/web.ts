@@ -1,5 +1,5 @@
-import { WebPlugin } from '@capacitor/core';
 import { ForgeRockAuthPlugin } from './definitions';
+import { WebPlugin } from '@capacitor/core';
 
 export class ForgeRockAuthWeb extends WebPlugin implements ForgeRockAuthPlugin {
   async initialize(options: { url: string; realm: string; journey: string }): Promise<void> {
@@ -9,8 +9,16 @@ export class ForgeRockAuthWeb extends WebPlugin implements ForgeRockAuthPlugin {
   async authenticate(): Promise<any> {
     return { success: true };
   }
-  
+
   async logout(): Promise<any> {
+    return { success: true };
+  }
+
+  async userInfo(): Promise<any> {
+    return { success: true };
+  }
+
+  async getAccessToken(): Promise<any> {
     return { success: true };
   }
 

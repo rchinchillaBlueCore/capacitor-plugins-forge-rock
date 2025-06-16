@@ -36,7 +36,6 @@ import Foundation
                     self.handle(node: nextNode)
                 } else {
                     print("[ForgeRock] Unexpected state — no token, node, or error.")
-                    call.reject("Unexpected authentication result")
                 }
             }
 

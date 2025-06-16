@@ -17,6 +17,8 @@ npx cap sync
 * [`initialize(...)`](#initialize)
 * [`authenticate(...)`](#authenticate)
 * [`logout()`](#logout)
+* [`userInfo()`](#userinfo)
+* [`getAccessToken()`](#getaccesstoken)
 
 </docgen-index>
 
@@ -73,6 +75,28 @@ logout() => Promise<{ message: string; }>
 ```
 
 **Returns:** <code>Promise&lt;{ message: string; }&gt;</code>
+
+--------------------
+
+
+### userInfo()
+
+```typescript
+userInfo() => Promise<string>
+```
+
+**Returns:** <code>Promise&lt;string&gt;</code>
+
+--------------------
+
+
+### getAccessToken()
+
+```typescript
+getAccessToken() => Promise<string>
+```
+
+**Returns:** <code>Promise&lt;string&gt;</code>
 
 --------------------
 

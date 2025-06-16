@@ -13,6 +13,8 @@ public class ForgeRockAuthPlugin: CAPPlugin, CAPBridgedPlugin {
         CAPPluginMethod(name: "initialize", returnType: CAPPluginReturnPromise),
         CAPPluginMethod(name: "authenticate", returnType: CAPPluginReturnPromise),
         CAPPluginMethod(name: "logout", returnType: CAPPluginReturnPromise),
+        CAPPluginMethod(name: "userInfo", returnType: CAPPluginReturnPromise),
+        CAPPluginMethod(name: "getAccessToken", returnType: CAPPluginReturnPromise),
     ]
     private let implementation = ForgeRockAuth()
 
@@ -32,13 +34,18 @@ public class ForgeRockAuthPlugin: CAPPlugin, CAPBridgedPlugin {
             call.reject("Missing required parameters: url, realm, or journey")
             return
         }
+        
+        let bundleId = Bundle.main.bundleIdentifier ?? "com.globalbank.app"
 
         do {
             let options = FROptions(
                 url: url.absoluteString,
                 realm: realm,
                 cookieName: "iPlanetDirectoryPro",
-                authServiceName: journey)
+                authServiceName: journey,
+                oauthClientId: "demo_client",
+                oauthRedirectUri: "\(bundleId)://oauth2redirect",
+                oauthScope: "openid profile email")
 
             try FRAuth.start(options: options)
             print("[ForgeRock] SDK initialized")
@@ -72,6 +79,7 @@ public class ForgeRockAuthPlugin: CAPPlugin, CAPBridgedPlugin {
             } else if let token = token {
                 print("[ForgeRock] Authentication complete, token received: \(token)")
                 handler.onSuccess(token: token)
+                
             } else {
                 print("[ForgeRock] Unexpected state — no token, node, or error.")
                 call.reject("Unexpected authentication result")
@@ -80,6 +88,11 @@ public class ForgeRockAuthPlugin: CAPPlugin, CAPBridgedPlugin {
     }
 
     @objc func logout(_ call: CAPPluginCall) {
+        
+      FRUser.currentUser?.logout()
+        /*
+         /* Da error en el siguiente escenario: */
+         /* Haces la autenticación con un usuario, cierras sesión y cambias el usuario a autenticarte */
         if let currentSession = FRSession.currentSession {
             currentSession.logout()
             print("[ForgeRock] Session closed successfully.")
@@ -90,6 +103,69 @@ public class ForgeRockAuthPlugin: CAPPlugin, CAPBridgedPlugin {
         } else {
             print("[ForgeRock] No active session to logout.")
             call.reject("No active session to logout.")
+        } */
+}
+    
+    @objc func userInfo(_ call: CAPPluginCall) {
+        
+        print("[ForgeRock] Getting user information...")
+        guard let user = FRUser.currentUser else {
+ 
+              let errorMsg = "[ForgeRock] Invalid SDK state: No current user for which to request user info"
+                call.reject("error", errorMsg, nil)
+              return
         }
+        user.getUserInfo { (userInfo, error) in
+            if let error = error {
+              FRLog.e(String(describing: error))
+                call.reject("error", error.localizedDescription, error)
+            }
+            else if let userInfo = userInfo {
+              FRLog.i(userInfo.debugDescription)
+                print("[ForgeRock] FRUser: ", userInfo.userInfo)
+                call.resolve(userInfo.userInfo)
+            }
+            else {
+              let errorMsg = "[ForgeRock] Invalid SDK state: userInfo returned no result"
+              FRLog.e(errorMsg)
+                call.reject("error", errorMsg, nil)
+            }
+          }
     }
+    
+    @objc func getAccessToken(_ call: CAPPluginCall) {
+
+        guard let user = FRUser.currentUser else {
+          let errorMsg = "[ForgeRock] Invalid SDK state: No current user for which to request access tokens"
+          FRLog.e(errorMsg)
+            call.reject("error", errorMsg, nil)
+          return
+        }
+
+        user.getAccessToken { user, error in
+          if let error = error {
+            FRLog.e(String(describing: error))
+              call.reject("error", error.localizedDescription, error)
+          }
+          else if let user = user, let accessToken = user.token {
+            let encoder = JSONEncoder()
+
+            do {
+              let data = try encoder.encode(accessToken)
+              let string = String(data: data, encoding: .utf8)
+              FRLog.i(string ?? "[ForgeRock] Encoding of token failed")
+                call.resolve([
+                       "token": string ?? ""
+                   ])
+            } catch {
+                call.reject("Error", "[ForgeRock] Serialization of tokens failed", error)
+            }
+          }
+          else {
+            let errorMsg = "[ForgeRock] Invalid SDK state: getAccessToken returned no result"
+            FRLog.e(errorMsg)
+              call.reject("error", errorMsg, nil)
+          }
+        }
+      }
 }

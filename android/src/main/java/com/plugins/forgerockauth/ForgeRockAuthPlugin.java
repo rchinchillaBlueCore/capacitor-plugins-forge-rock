@@ -13,7 +13,7 @@ import com.plugins.forgerockauth.ForgeRockNodeListener;
 @CapacitorPlugin(name = "ForgeRockAuth")
 public class ForgeRockAuthPlugin extends Plugin {
 
-    private static final String TAG = "ForgeRockAuthPlugin";
+    private static final String TAG = "[ForgeRockAuthPlugin]";
     public static Context context;
 
     @Override
@@ -32,7 +32,7 @@ public class ForgeRockAuthPlugin extends Plugin {
             ForgeRockAuth.initialize(context, url, realm, journey);
             call.resolve();
         } catch (Exception e) {
-            call.reject("Fallo al initializer el SDK de ForgeRock", e);
+            call.reject("ForgeRock SDK initialization failed", e);
         }
     }
     @PluginMethod
@@ -50,6 +50,16 @@ public class ForgeRockAuthPlugin extends Plugin {
         } catch (Exception e) {
             Log.e(TAG, "Authentication error", e);
             call.reject("Authentication failed: " + e.getMessage(), e);
+        }
+    }
+
+    @PluginMethod
+    public void userInfo(PluginCall call) {
+        try {
+            ForgeRockAuth.userInfo(call);
+        } catch (Exception e) {
+            Log.e(TAG, "Getting user info error", e);
+            call.reject("Getting user info is failed: " + e.getMessage(), e);
         }
     }
 

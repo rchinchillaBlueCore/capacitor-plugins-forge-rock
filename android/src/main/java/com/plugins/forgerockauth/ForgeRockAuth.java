@@ -20,7 +20,7 @@ public class ForgeRockAuth {
     private static final String TAG = "[ForgeRockAuth]";
     private static FRSession session;
 
-    public static void initialize(Context context, String url, String realm, String journey) {
+    public static void initialize(Context context, String url, String realm, String journey, String oauthClientId, String oauthScope) {
         Log.d(TAG, "ForgeRock SDK initialize");
         try {
 
@@ -39,9 +39,9 @@ public class ForgeRockAuth {
                 });
 
                 frOptionsBuilder.oauth(serviceBuilder -> {
-                    serviceBuilder.setOauthClientId("demo_client") ;
+                    serviceBuilder.setOauthClientId(oauthClientId) ;
                     serviceBuilder.setOauthRedirectUri(bundleId + "://oauth2redirect");
-                    serviceBuilder.setOauthScope("openid profile email");
+                    serviceBuilder.setOauthScope(oauthScope);
                     return null;
                 });
 

@@ -2,7 +2,13 @@ import { ForgeRockAuthPlugin } from './definitions';
 import { WebPlugin } from '@capacitor/core';
 
 export class ForgeRockAuthWeb extends WebPlugin implements ForgeRockAuthPlugin {
-  async initialize(options: { url: string; realm: string; journey: string }): Promise<void> {
+  async initialize(options: {
+    url: string;
+    realm: string;
+    journey: string;
+    oauthClientId: string;
+    oauthScope: string;
+  }): Promise<void> {
     console.log('SDK inicializado en web con:', options);
   }
 

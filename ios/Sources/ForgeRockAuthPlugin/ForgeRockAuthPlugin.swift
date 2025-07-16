@@ -16,7 +16,9 @@ public class ForgeRockAuthPlugin: CAPPlugin, CAPBridgedPlugin {
         CAPPluginMethod(name: "userInfo", returnType: CAPPluginReturnPromise),
         CAPPluginMethod(name: "getAccessToken", returnType: CAPPluginReturnPromise),
     ]
+    public var pendingNode: Node? = nil
     private let implementation = ForgeRockAuth()
+    public var didSubmitConfirmation = false
 
     @objc func echo(_ call: CAPPluginCall) {
         let value = call.getString("value") ?? ""
@@ -29,9 +31,11 @@ public class ForgeRockAuthPlugin: CAPPlugin, CAPBridgedPlugin {
         guard let urlString = call.getString("url"),
             let url = URL(string: urlString),
             let realm = call.getString("realm"),
-            let journey = call.getString("journey")
+            let journey = call.getString("journey"),
+            let oauthClientId = call.getString("oauthClientId"),
+            let oauthScope = call.getString("oauthScope")
         else {
-            call.reject("Missing required parameters: url, realm, or journey")
+            call.reject("Missing required parameters: url, realm, journey, oauthClientId, or oauthScope")
             return
         }
         
@@ -43,9 +47,9 @@ public class ForgeRockAuthPlugin: CAPPlugin, CAPBridgedPlugin {
                 realm: realm,
                 cookieName: "iPlanetDirectoryPro",
                 authServiceName: journey,
-                oauthClientId: "demo_client",
+                oauthClientId: oauthClientId,
                 oauthRedirectUri: "\(bundleId)://oauth2redirect",
-                oauthScope: "openid profile email")
+                oauthScope: oauthScope)
 
             try FRAuth.start(options: options)
             print("[ForgeRock] SDK initialized")
@@ -58,6 +62,26 @@ public class ForgeRockAuthPlugin: CAPPlugin, CAPBridgedPlugin {
     }
 
     @objc func authenticate(_ call: CAPPluginCall) {
+        let isRetry = call.getBool("isRetry") ?? false
+        let handler = ForgeRockNodeHandler(call: call, plugin: self)
+        
+        
+        print("[ForgeRock] isRetry: \(isRetry)")
+        if isRetry {
+            // Usamos el pendingNode
+            guard let pendingNode = self.pendingNode else {
+                call.reject("No pending node to resume")
+                return
+            }
+
+            print("[ForgeRock] Resuming authentication using pendingNode with callbacks: \(pendingNode.callbacks.count)")
+                    
+            handler.handle(node: pendingNode)
+            
+            return
+        }
+
+        // Flujo inicial: comenzamos un nuevo journey
         guard let journey = call.getString("journey") else {
             call.reject("Missing required parameter: journey")
             return
@@ -68,7 +92,6 @@ public class ForgeRockAuthPlugin: CAPPlugin, CAPBridgedPlugin {
         print("[ForgeRock] FRUser: ", FRUser.currentUser)
 
         FRSession.authenticate(authIndexValue: journey) { token, node, error in
-            let handler = ForgeRockNodeHandler(call: call)
             if let error = error {
                 print("[ForgeRock] Error starting authentication: \(error)")
                 call.reject("Error starting authentication: \(error.localizedDescription)")
@@ -79,13 +102,13 @@ public class ForgeRockAuthPlugin: CAPPlugin, CAPBridgedPlugin {
             } else if let token = token {
                 print("[ForgeRock] Authentication complete, token received: \(token)")
                 handler.onSuccess(token: token)
-                
             } else {
                 print("[ForgeRock] Unexpected state — no token, node, or error.")
                 call.reject("Unexpected authentication result")
             }
         }
     }
+
 
     @objc func logout(_ call: CAPPluginCall) {
         
@@ -168,4 +191,6 @@ public class ForgeRockAuthPlugin: CAPPlugin, CAPBridgedPlugin {
           }
         }
       }
+    
+    
 }

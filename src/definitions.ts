@@ -9,10 +9,13 @@ export interface ForgeRockAuthPlugin {
     oauthClientId: string;
     oauthScope: string;
   }): Promise<void>;
-  authenticate(options: { journey: string; username?: string; password?: string, isRetry?: boolean }): Promise<{
+  authenticate(options: { journey: string; username?: string; password?: string; isRetry?: boolean }): Promise<{
     authId?: string;
     token?: string;
     userExists?: boolean;
+    status?: string;
+    errorMessage?: string;
+    callbacks: string[];
   }>;
   logout(): Promise<{
     message: string;
